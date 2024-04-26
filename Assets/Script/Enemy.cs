@@ -7,8 +7,18 @@ public class Enemy : LivingEntity
 {
     public LayerMask whatIsTarget;
     private LivingEntity targetEntity; // 추적할 대상
-    private NavMeshAgent pathFinder; // 경로계산 AI 에이전트
 
+    public LivingEntity TargetEntity
+    {
+        get;
+    }
+
+    private NavMeshAgent pathFinder; // 경로계산 AI 에이전트
+    public NavMeshAgent PathFinder
+    {
+        get { return pathFinder; }
+        set { pathFinder.isStopped = value; }
+    }
     public ParticleSystem hitEffect; // 피격시 재생할 파티클 효과
     public AudioClip deathSound; // 사망시 재생할 소리
     public AudioClip hitSound; // 피격시 재생할 소리
@@ -19,7 +29,7 @@ public class Enemy : LivingEntity
 
     public float damage = 20f; // 공격력
     public float timeBetAttack = 0.5f; // 공격 간격
-    private float lastAttackTime; // 마지막 공격 시점
+    public float lastAttackTime; // 마지막 공격 시점
 
     // 추적할 대상이 존재하는지 알려주는 프로퍼티
     private bool hasTarget
