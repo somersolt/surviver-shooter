@@ -3,6 +3,7 @@ using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 
 public class UIManager : MonoBehaviour
@@ -21,16 +22,24 @@ public class UIManager : MonoBehaviour
     }
     private static UIManager m_instance;
     public GameObject gameoverUI;
-    public Text scoreText;
+    public TextMeshProUGUI scoreText;
+    public TextMeshProUGUI gameOverText;
+    public int score = 0;
+
 
     public void UpdateScoreText(int newScore)
     {
-        scoreText.text = "Score : " + newScore;
+        score += newScore;
+        scoreText.text = "Score : " + score;
     }
     public void SetActiveGameoverUI(bool active)
     {
         gameoverUI.SetActive(active);
     }
 
+    public void Restart()
+    {
+        SceneManager.LoadScene("Main");
+    }
 
 }

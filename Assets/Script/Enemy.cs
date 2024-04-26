@@ -1,27 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Pool;
 
 public class Enemy : LivingEntity
 {
     public LayerMask whatIsTarget;
     private LivingEntity targetEntity; // 추적할 대상
 
-    public LivingEntity TargetEntity
-    {
-        get;
-    }
-
     private NavMeshAgent pathFinder; // 경로계산 AI 에이전트
-    public NavMeshAgent PathFinder
-    {
-        get { return pathFinder; }
-        set { pathFinder.isStopped = value; }
-    }
+
     public ParticleSystem hitEffect; // 피격시 재생할 파티클 효과
     public AudioClip deathSound; // 사망시 재생할 소리
     public AudioClip hitSound; // 피격시 재생할 소리
+    public Gun gun;
 
     private Animator enemyAnimator; // 애니메이터 컴포넌트
     private AudioSource enemyAudioPlayer; // 오디오 소스 컴포넌트
@@ -31,6 +25,7 @@ public class Enemy : LivingEntity
     public float timeBetAttack = 0.5f; // 공격 간격
     public float lastAttackTime; // 마지막 공격 시점
 
+    public IObjectPool<Enemy> pool;
     // 추적할 대상이 존재하는지 알려주는 프로퍼티
     private bool hasTarget
     {
@@ -52,6 +47,8 @@ public class Enemy : LivingEntity
         enemyAnimator = GetComponent<Animator>();
         enemyAudioPlayer = GetComponent<AudioSource>();
         enemyRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
+        GameObject gunGameObject = GameObject.FindWithTag("Gun");
+        gun = gunGameObject.GetComponent<Gun>();
     }
 
     //public void Setup(ZombieData data)
@@ -59,7 +56,22 @@ public class Enemy : LivingEntity
     //    Setup(data.health, data.damage, data.speed);
     //}
     //// 적 AI의 초기 스펙을 결정하는 셋업 메서드
-
+    public void Reset()
+    {
+        dead = false;
+        var rid = GetComponent<Rigidbody>();
+        rid.isKinematic = true;
+        health = startingHealth;
+        pathFinder.enabled = true;
+        pathFinder.isStopped = false;
+        var cols = GetComponentsInChildren<Collider>();
+        CancelInvoke("Disable");
+        foreach (Collider col in cols)
+        {
+            col.enabled = true;
+        }
+        StartCoroutine(UpdatePath());
+    }
     public void Setup(float newHealth, float newDamage, float newSpeed)
     {
         startingHealth = newHealth;
@@ -133,6 +145,8 @@ public class Enemy : LivingEntity
         enemyAnimator.SetTrigger("Die");
         enemyAudioPlayer.PlayOneShot(deathSound);
 
+        UIManager.instance.UpdateScoreText(100);
+        gun.upgradePoint += 100;
 
     }
 
@@ -143,6 +157,8 @@ public class Enemy : LivingEntity
             var entity = other.GetComponent<LivingEntity>();
             if (entity != null && entity == targetEntity)
             {
+                pathFinder.isStopped = true;
+
                 var pos = transform.position;
                 pos.y = 1f;
                 var hitPoint = other.ClosestPoint(pos);
@@ -155,6 +171,15 @@ public class Enemy : LivingEntity
         }
 
     }
+    private void OnTriggerExit(Collider other)
+    {
+        var entity = other.GetComponent<LivingEntity>();
+        if (entity != null && entity == targetEntity)
+        {
+            pathFinder.isStopped = false;
+        }
+        }
+
 
     public void StartSinking()
     {
@@ -166,7 +191,7 @@ public class Enemy : LivingEntity
 
     private void Disable()
     {
-        gameObject.SetActive(false);
+        pool.Release(this);
     }
 
 }
