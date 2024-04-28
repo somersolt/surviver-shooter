@@ -15,7 +15,6 @@ public class Enemy : LivingEntity
     public ParticleSystem hitEffect; // 피격시 재생할 파티클 효과
     public AudioClip deathSound; // 사망시 재생할 소리
     public AudioClip hitSound; // 피격시 재생할 소리
-    public Gun gun;
 
     private Animator enemyAnimator; // 애니메이터 컴포넌트
     private AudioSource enemyAudioPlayer; // 오디오 소스 컴포넌트
@@ -47,8 +46,7 @@ public class Enemy : LivingEntity
         enemyAnimator = GetComponent<Animator>();
         enemyAudioPlayer = GetComponent<AudioSource>();
         enemyRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
-        GameObject gunGameObject = GameObject.FindWithTag("Gun");
-        gun = gunGameObject.GetComponent<Gun>();
+
     }
 
     //public void Setup(ZombieData data)
@@ -146,7 +144,6 @@ public class Enemy : LivingEntity
         enemyAudioPlayer.PlayOneShot(deathSound);
 
         UIManager.instance.UpdateScoreText(100);
-        gun.upgradePoint += 100;
 
     }
 
@@ -185,8 +182,16 @@ public class Enemy : LivingEntity
     {
         var rid = GetComponent<Rigidbody>();
         rid.isKinematic = false;
-
-        Invoke("Disable", 2f);
+        if (gameObject.CompareTag("Boss"))
+        {
+            Destroy(gameObject);
+            UIManager.instance.gameoverUI.SetActive(true);
+            UIManager.instance.gameOverText.text = "Victory!!";
+        }
+        else
+        {
+            Invoke("Disable", 2f);
+        }
     }
 
     private void Disable()

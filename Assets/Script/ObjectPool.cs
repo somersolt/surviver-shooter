@@ -21,7 +21,7 @@ public class ObjectPool : MonoBehaviour
 
     private void Update()
     {
-        if (Time.time > lastRespawnTime + respawnInterval) 
+        if (Time.time > lastRespawnTime + respawnInterval && !GameMgr.instance.onboss) 
         {
             CreateEnemy();
             lastRespawnTime = Time.time;

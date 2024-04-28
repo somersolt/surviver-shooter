@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Zombunny
       objectReference: {fileID: 0}
+    - target: {fileID: 100074, guid: be66986effd141b4992d2d78be127139, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
     - target: {fileID: 400074, guid: be66986effd141b4992d2d78be127139, type: 3}
       propertyPath: m_LocalPosition.x
       value: 3.17
@@ -177,6 +181,7 @@ MonoBehaviour:
   hitEffect: {fileID: 2867052542770109064}
   deathSound: {fileID: 8300000, guid: 1d3bfb9269f136947bf8ac164cace1ff, type: 3}
   hitSound: {fileID: 8300000, guid: 02e6208ec76314158a9f548f51fe9f11, type: 3}
+  gun: {fileID: 0}
   damage: 20
   timeBetAttack: 0.5
   lastAttackTime: 0

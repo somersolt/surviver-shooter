@@ -83,6 +83,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 100074, guid: c236aa7ad6dcabe47abc7d2cf903ae71, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
     - target: {fileID: 400074, guid: c236aa7ad6dcabe47abc7d2cf903ae71, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -248,6 +252,7 @@ MonoBehaviour:
   hitEffect: {fileID: 1334917082713046779}
   deathSound: {fileID: 8300000, guid: 62366b8d2c37a49dca550841c741317f, type: 3}
   hitSound: {fileID: 8300000, guid: 1d4840678e677424b8921716c72397ea, type: 3}
+  gun: {fileID: 0}
   damage: 20
   timeBetAttack: 0.5
   lastAttackTime: 0

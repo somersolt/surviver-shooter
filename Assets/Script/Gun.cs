@@ -36,15 +36,6 @@ public class Gun : MonoBehaviour
         }
 
     }
-    private void Update()
-    {
-        if ( upgradePoint >= 100)
-        {
-            upgradePoint -= 100;
-            gunData.damage += 20;
-            //boxsize += new Vector3(0.1f, 0f, 0f) * 10;
-        }
-    }
 
     private void Shot()
     {

@@ -26,7 +26,6 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI gameOverText;
     public int score = 0;
 
-
     public void UpdateScoreText(int newScore)
     {
         score += newScore;
